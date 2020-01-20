@@ -19,33 +19,36 @@ class OAuthAuthorizationMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        // Assume the SessionMiddleware handles and populates a session
-        // container
+        // A SessionMiddleware populates a session containter
         $session = $request->getAttribute('session');
-        $user = $session->get(UserInterface::class);
-        
-        $authRequest = $request->getAttribute(AuthorizationRequest::class);
         $session->set('oauth2_request_params', $request->getQueryParams());
-        // The user is authenticated:
+        $user = $session->get(UserInterface::class);
+        $authRequest = $request->getAttribute(AuthorizationRequest::class);
+
+        // The user is authenticated
         if ($user) {
             $user = new UserEntity($user['username']);
             $authRequest->setUser($user);
-
             $clientAllowed = $session->get('client_allowed');
 
+            // The user needs to give or deny access to the client
             if($clientAllowed === null) {
                 return new RedirectResponse('/oauth2/consent');
+
+            // The user denied access to the client
             } elseif ($clientAllowed === False) {
                 $session->unset('client_allowed');
                 return new JsonResponse(array('code' => '401', 'message' => 'Client access denied'));
             }
 
+            // The user authorized the client
             $authRequest->setAuthorizationApproved(true);
             $session->unset('oauth2_request_params');
             $session->unset('client_allowed');
             return $handler->handle($request);
         }
 
+        // The user needs to login
         return new RedirectResponse('/oauth2/login');
     }
 }

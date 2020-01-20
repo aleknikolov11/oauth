@@ -12,6 +12,7 @@ use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Expressive\Session\SessionInterface;
+use Zend\Expressive\Authentication\UserInterface;
 
 class OauthConsentHandler implements RequestHandlerInterface
 {
@@ -33,7 +34,7 @@ class OauthConsentHandler implements RequestHandlerInterface
         $redirect = $this->getRedirect($request, $session);
 
         if($request->getMethod() === 'POST') {
-            return $this->validateConsent($request, $session, $redirect);
+            return $this->validateConsent($request, $session);
         }
 
         $session->set(self::REDIRECT_ATTRIBUTE, $redirect);
@@ -49,7 +50,7 @@ class OauthConsentHandler implements RequestHandlerInterface
 
         if(! $redirect) {
             $redirect = $request->getHeaderLine('Referer');
-            if (in_array($redirect, ['', '/oauth2/login'], true)) {
+            if (in_array($redirect, ['', '/oauth2/consent'], true)) {
                 $redirect = '/oauth2/authorize';
             }
         }
@@ -57,8 +58,9 @@ class OauthConsentHandler implements RequestHandlerInterface
         return $redirect;
     }
 
-    private function validateConsent(ServerRequestInterface $request, SessionInterface $session, string $redirect) : ResponseInterface
+    private function validateConsent(ServerRequestInterface $request, SessionInterface $session) : ResponseInterface
     {
+        $redirect = '/oauth2/authorize';
         $requestData = $request->getParsedBody();
         $session->unset(self::REDIRECT_ATTRIBUTE);
         if(array_key_exists('allow', $requestData)) {
