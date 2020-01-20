@@ -130,7 +130,7 @@ CREATE TABLE `oauth_users` (
 --
 
 INSERT INTO `oauth_users` (`id`, `username`, `password`, `first_name`, `last_name`) VALUES
-(1, 'anikolov111', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq', 'Alek', 'Nikolov');
+(1, 'test_user', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq', 'First', 'Last');
 
 --
 -- Indexes for dumped tables
