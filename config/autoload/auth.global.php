@@ -13,10 +13,10 @@ return [
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
         'pdo' => [
-            'table' => 'user_table',
+            'table' => 'oauth_users',
             'field' => [
-                'identity' => 'username_field',
-                'password' => 'password_field',
+                'identity' => 'username',
+                'password' => 'password',
             ],
         ], 
 
