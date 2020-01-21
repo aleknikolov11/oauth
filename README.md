@@ -1,4 +1,4 @@
-#OAuth2 Authorization Server#
+# OAuth2 Authorization Server #
 
 The application uses the oauth2 package provided in:
 https://docs.zendframework.com/zend-expressive-authentication-oauth2/
@@ -9,7 +9,7 @@ The following grants are supported:
 	* Client Credentials Grant
 	* Password Grant
 
-##Configuration##
+## Configuration ##
 
 To configure the authorization server, the .dist extension of auth.local.php.dist file, located in ./config/autoload, should be removed. In this file, the 'pdo' section should be filled to configure the  database, used for the server:
 
@@ -45,9 +45,9 @@ The database also contains entries in the following tables:
 	*oauth_scopes - read and write
 	*oauth_clients - client with name=client_name and secret=secret
 	
-##Grants##
+## Grants ##
 
-###Authorization Code Grant###
+### Authorization Code Grant ###
 
 The client sends the following parameters via query string arguments to the authorization server(oauth2/authorize):
 
@@ -88,7 +88,7 @@ The authorization server responds sends a JSON payload with values as follows:
 
 ```curl --data="grant_type=authorization_code&client_id=client_name&client_secret=secret&redirect_uri=%2F&code=code_received_from_server" localhost:8080/oauth2/token```
 
-###Client Credentials Grant###
+### Client Credentials Grant ###
 
 The client sends a POST request with the following body parameters to the authorization server	(oauth2/token):
 
@@ -107,7 +107,7 @@ The values returned are as follows:
 
 ```curl --data="grant_type=client_credentials&client_id=client_name&client_secret=secret&scope=read" localhost:8080/oauth2/token```
 
-###Password Grant###
+### Password Grant ###
 
 The client sends a POST request with following parameters to the authorization server (oauth2/token):
 
