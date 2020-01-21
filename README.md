@@ -13,7 +13,8 @@ The following grants are supported:
 
 To configure the authorization server, the .dist extension of auth.local.php.dist file, located in ./config/autoload, should be removed. In this file, the 'pdo' section should be filled to configure the  database, used for the server:
 
-``` 'pdo' => [
+``` 
+'pdo' => [
             'dsn'      => '',
             'username' => '',
             'password' => '',
@@ -64,7 +65,7 @@ The user will then be asked to login to the authorization server and approve the
 	
 **Example**
 
-```curl "localhost:8080/oauth2/authorize?response_type=code&client_id=client_name&redirect_uri=%2F&scope=read&code_challenge=47DEQpj8HBSaKL4TImWF5JCeuQeRkm5NMpJWZG3hSuFU"
+```curl "localhost:8080/oauth2/authorize?response_type=code&client_id=client_name&redirect_uri=%2F&scope=read&code_challenge=47DEQpj8HBSaKL4TImWF5JCeuQeRkm5NMpJWZG3hSuFU"```
 
 **Access Token**
 
