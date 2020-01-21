@@ -40,6 +40,10 @@ CREATE TABLE `oauth_access_tokens` (
   `expires_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE INDEX `IDX_CA42527CA76ED39519EB6921BDA26CCD` ON oauth_access_tokens (`user_id`,`client_id`);
+CREATE INDEX `IDX_CA42527CA76ED395` ON oauth_access_tokens (`user_id`);
+CREATE INDEX `IDX_CA42527C19EB6921` ON oauth_access_tokens (`client_id`);
+
 -- --------------------------------------------------------
 
 --
@@ -55,6 +59,8 @@ CREATE TABLE `oauth_auth_codes` (
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE INDEX `IDX_BB493F83A76ED395` ON oauth_auth_codes (`user_id`);
+CREATE INDEX `IDX_BB493F8319EB6921` ON oauth_auth_codes (`client_id`);
 -- --------------------------------------------------------
 
 --
@@ -74,6 +80,9 @@ CREATE TABLE `oauth_clients` (
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+CREATE INDEX `IDX_13CE81015E237E06A76ED395BDA26CCD` ON oauth_clients (`name`,`user_id`);
+CREATE INDEX `IDX_13CE8101A76ED395` ON oauth_clients (`user_id`);
 --
 -- Dumping data for table `oauth_clients`
 --
@@ -94,6 +103,7 @@ CREATE TABLE `oauth_refresh_tokens` (
   `expires_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE INDEX `IDX_5AB6872CCB2688BDA26CCD` ON oauth_refresh_tokens (`access_token_id`);
 -- --------------------------------------------------------
 
 --
@@ -134,6 +144,7 @@ CREATE TABLE `oauth_users` (
 INSERT INTO `oauth_users` (`id`, `username`, `password`, `first_name`, `last_name`) VALUES
 (1, 'test_user', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq', 'First', 'Last');
 
+CREATE INDEX `UNIQ_93804FF8F85E0677` ON oauth_users (`username`);
 --
 -- Indexes for dumped tables
 --
