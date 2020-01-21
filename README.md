@@ -8,10 +8,19 @@ The following grants are supported:
   * Authorization Code Grant
   * Client Credentials Grant
   * Password Grant
+  
+## Run the project ##
+
+To run the project, do the following things:
+
+  1. Run 'composer install' in the root directory of the project.
+  2. Create an empty database and load the contents of oauth.sql located in ./data.
+  3. Copy auth.local.php.dist to auth.local.php and fill it out as shown in the "Configuration" secton below.
+  4. Run 'composer serve' to serve the app using the 'php -s' command
 
 ## Configuration ##
 
-To configure the authorization server, the .dist extension of auth.local.php.dist file, located in ./config/autoload, should be removed. In this file, the 'pdo' section should be filled to configure the  database, used for the server:
+The 'pdo' section of auth.local.php should be filled to configure the database, used for the server:
 
 ``` 
 'pdo' => [
@@ -29,6 +38,21 @@ To configure the authorization server, the .dist extension of auth.local.php.dis
   * 'table' - the name of the table, containing the users information(username and password)
   * 'identity' - the name of the column from the table that contains the usernames
   * 'password' - the name of the column from the table that contains user password
+  
+**Example**
+
+``` 
+'pdo' => [
+            'dsn'      => 'mysql:host=localhost;dbname=test_db',
+            'username' => 'root',
+            'password' => 'password',
+            'table' => 'users_table',
+            'field' => [
+                'identity' => 'username_field',
+                'password' => 'password_field',
+            ],
+        ],
+```
 	
 A sample database is provided in ./data (oauth.sql). It conatins the following tables:
 	
