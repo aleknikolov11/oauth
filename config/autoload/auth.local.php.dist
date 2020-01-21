@@ -10,11 +10,6 @@ return [
             'dsn'      => 'mysql:host=localhost;dbname=test_dbname',
             'username' => 'root',
             'password' => 'password',
-            'table' => 'user_table',
-            'field' => [
-                'identity' => 'username_field',
-                'password' => 'password_field',
-            ],
         ], 
     ]
 ];
