@@ -1,150 +1,129 @@
-# Expressive Skeleton and Installer
+#OAuth2 Authorization Server#
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-skeleton.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-skeleton)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-skeleton/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-skeleton?branch=master)
+The application uses the oauth2 package provided in:
+https://docs.zendframework.com/zend-expressive-authentication-oauth2/
 
-*Begin developing PSR-15 middleware applications in seconds!*
+The following grants are supported:
 
-[zend-expressive](https://github.com/zendframework/zend-expressive) builds on
-[zend-stratigility](https://github.com/zendframework/zend-stratigility) to
-provide a minimalist PSR-15 middleware framework for PHP with routing, DI
-container, optional templating, and optional error handling capabilities.
+	* Authorization Code Grant
+	* Client Credentials Grant
+	* Password Grant
 
-This installer will setup a skeleton application based on zend-expressive by
-choosing optional packages based on user input as demonstrated in the following
-screenshot:
+##Configuration##
 
-![screenshot-installer](https://cloud.githubusercontent.com/assets/459648/10410494/16bdc674-6f6d-11e5-8190-3c1466e93361.png)
+To configure the authorization server, the .dist extension of auth.local.php.dist file, located in ./config/autoload, should be removed. In this file, the 'pdo' section should be filled to configure the  database, used for the server:
 
-The user selected packages are saved into `composer.json` so that everyone else
-working on the project have the same packages installed. Configuration files and
-templates are prepared for first use. The installer command is removed from
-`composer.json` after setup succeeded, and all installer related files are
-removed.
-
-## Getting Started
-
-Start your new Expressive project with composer:
-
-```bash
-$ composer create-project zendframework/zend-expressive-skeleton <project-path>
+``` 'pdo' => [
+            'dsn'      => '',
+            'username' => '',
+            'password' => '',
+            'table' => '',
+            'field' => [
+                'identity' => '',
+                'password' => '',
+            ],
+        ],
 ```
+	* 'dsn', 'username' and 'password' are used for the PDO database configuration
+	* 'table' - the name of the table, containing the users information(username and password)
+	* 'identity' - the name of the column from the table that contains the usernames
+	* 'password' - the name of the column from the table that contains user password
+	
+A sample database is provided in ./data (oauth.sql). It conatins the following tables:
+	
+	* oauth_users
+	* oauth_clients
+	* oauth_scopes
+	* oauth_auth_codes
+	* oauth_access_tokens
+	* oauth_refresh_tokens
+	
+The database also contains entries in the following tables:
+	
+	*oauth_users - user with username=test_user and password=test123
+	*oauth_scopes - read and write
+	*oauth_clients - client with name=client_name and secret=secret
+	
+##Grants##
 
-After choosing and installing the packages you want, go to the
-`<project-path>` and start PHP's built-in web server to verify installation:
+###Authorization Code Grant###
 
-```bash
-$ composer run --timeout=0 serve
-```
+The client sends the following parameters via query string arguments to the authorization server(oauth2/authorize):
 
-You can then browse to http://localhost:8080.
+	* response_type = code.
+	* 'client_id' - the client identifer.
+	* 'redirect_uri' - the URI to which to redirect the client following successful authorization. This parameter is optional, but if it is not sent, the user will be redirected to a default location on completion.
+	* 'scope' - a space-delimited list of requested scope permissions.
+	* 'state' - a Cross-Site Request Forgery (CSRF) token. This parameter is optional, but highly recommended. You can store the value of the CSRF token in the user’s session to be validated in the next step.
+	* 'code_challenge' - following the specifications of RFC-7636
+	
+The user will then be asked to login to the authorization server and approve the client request. If the user approves the request they will be redirected to the redirect URI with the following parameters in the query string arguments:
 
-> ### Linux users
->
-> On PHP versions prior to 7.1.14 and 7.2.2, this command might not work as
-> expected due to a bug in PHP that only affects linux environments. In such
-> scenarios, you will need to start the [built-in web
-> server](http://php.net/manual/en/features.commandline.webserver.php) yourself,
-> using the following command:
->
-> ```bash
-> $ php -S 0.0.0.0:8080 -t public/ public/index.php
-> ```
+	* code - the authorization code.
+	* state - the CSRF parameter sent in the original request. You can compare this value with the one stored in the user’s session.
+	
+**Example**
 
-> ### Setting a timeout
->
-> Composer commands time out after 300 seconds (5 minutes). On Linux-based
-> systems, the `php -S` command that `composer serve` spawns continues running
-> as a background process, but on other systems halts when the timeout occurs.
->
-> As such, we recommend running the `serve` script using a timeout. This can
-> be done by using `composer run` to execute the `serve` script, with a
-> `--timeout` option. When set to `0`, as in the previous example, no timeout
-> will be used, and it will run until you cancel the process (usually via
-> `Ctrl-C`). Alternately, you can specify a finite timeout; as an example,
-> the following will extend the timeout to a full day:
->
-> ```bash
-> $ composer run --timeout=86400 serve
-> ```
+```curl "localhost:8080/oauth2/authorize?response_type=code&client_id=client_name&redirect_uri=%2F&scope=read&code_challenge=47DEQpj8HBSaKL4TImWF5JCeuQeRkm5NMpJWZG3hSuFU"
 
-## Troubleshooting
+**Access Token**
 
-If the installer fails during the ``composer create-project`` phase, please go
-through the following list before opening a new issue. Most issues we have seen
-so far can be solved by `self-update` and `clear-cache`.
+To request the access token, the client sends a POST request to the authorization server (oauth2/token) with the following parameters:
 
-1. Be sure to work with the latest version of composer by running `composer self-update`.
-2. Try clearing Composer's cache by running `composer clear-cache`.
+	* grant_type = authorization_code.
+	* 'client_id' - the client’s ID.
+	* 'client_secret' - the client’s secret.
+	* 'redirect_uri' - the previous client redirect URI.
+	* 'code' - the authorization code as returned in the authorization code request (as detailed in the previous section).
+	
+The authorization server responds sends a JSON payload with values as follows:
 
-If neither of the above help, you might face more serious issues:
+	* 'token_type' - the type of generated token (here, and generally, "Bearer").
+	* 'expires_in' - an integer representing the time-to-live (in seconds) of the access token.
+	* 'refresh_token' - a token that can be used to refresh the access_token when expired.
+	* 'access_token' - a JSON Web Token (JWT) signed with the authorization server’s private key. This token must be used in the Authorization request HTTP header on subsequent requests.
+	
+**Example**
 
-- Info about the [zlib_decode error](https://github.com/composer/composer/issues/4121).
-- Info and solutions for [composer degraded mode](https://getcomposer.org/doc/articles/troubleshooting.md#degraded-mode).
+```curl --data="grant_type=authorization_code&client_id=client_name&client_secret=secret&redirect_uri=%2F&code=code_received_from_server" localhost:8080/oauth2/token```
 
-## Application Development Mode Tool
+###Client Credentials Grant###
 
-This skeleton comes with [zf-development-mode](https://github.com/zfcampus/zf-development-mode). 
-It provides a composer script to allow you to enable and disable development mode.
+The client sends a POST request with the following body parameters to the authorization server	(oauth2/token):
 
-### To enable development mode
+	* grant_type = client_credentials.
+	* 'client_id' - the client's ID.
+	* 'client_secret' - the client's secret.
+	* 'scope' - a space-delimited list of requested scope permissions.
+	
+The values returned are as follows:
 
-**Note:** Do NOT run development mode on your production server!
+	* 'token_type' - the type of generated token (here, and generally, Bearer).
+	* 'expires_in' - an integer representing the time-to-live (in seconds) of the access token.
+	* 'access_token' - a JSON Web Token (JWT) signed with the authorization server’s private key. This token must be used in the Authorization request HTTP header in subsequent requests.
+	
+**Example**
 
-```bash
-$ composer development-enable
-```
+```curl --data="grant_type=client_credentials&client_id=client_name&client_secret=secret&scope=read" localhost:8080/oauth2/token```
 
-**Note:** Enabling development mode will also clear your configuration cache, to 
-allow safely updating dependencies and ensuring any new configuration is picked 
-up by your application.
+###Password Grant###
 
-### To disable development mode
+The client sends a POST request with following parameters to the authorization server (oauth2/token):
 
-```bash
-$ composer development-disable
-```
+	* grant_type = password.
+	* 'client_id' - the client’s ID.
+	* 'client_secret' - the client’s secret.
+	* 'scope' - a space-delimited list of requested scope permissions.
+	* 'username' - the user’s username.
+	* 'password' - the user’s password.
+	
+The authorization server responds with a JSON as follows:
 
-### Development mode status
+	* 'token_type'  the type of generated token (Bearer).
+	* 'expires_in' - an integer representing the TTL (in seconds) of the access token.
+	* 'refresh_token' - a token that can be used to refresh the access_token when expired.
+	* 'access_token' - a JWT signed with the authorization server’s private key. This token must be used in the Authorization request HTTP header.
+	
+**Example**
 
-```bash
-$ composer development-status
-```
-
-## Configuration caching
-
-By default, the skeleton will create a configuration cache in
-`data/config-cache.php`. When in development mode, the configuration cache is
-disabled, and switching in and out of development mode will remove the
-configuration cache.
-
-You may need to clear the configuration cache in production when deploying if
-you deploy to the same directory. You may do so using the following:
-
-```bash
-$ composer clear-config-cache
-```
-
-You may also change the location of the configuration cache itself by editing
-the `config/config.php` file and changing the `config_cache_path` entry of the
-local `$cacheConfig` variable.
-
-## Skeleton Development
-
-This section applies only if you cloned this repo with `git clone`, not when you
-installed expressive with `composer create-project ...`.
-
-If you want to run tests against the installer, you need to clone this repo and
-setup all dependencies with composer.  Make sure you **prevent composer running
-scripts** with `--no-scripts`, otherwise it will remove the installer and all
-tests.
-
-```bash
-$ composer update --no-scripts
-$ composer test
-```
-
-Please note that the installer tests remove installed config files and templates
-before and after running the tests.
-
-Before contributing read [the contributing guide](docs/CONTRIBUTING.md).
+```curl --data="grant_type=password&client_id=client_name&client_secret=secret&scope=read&username=test_user&password=test123" localhost:8080/oauth2/token```

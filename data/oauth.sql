@@ -110,6 +110,8 @@ CREATE TABLE `oauth_scopes` (
 
 INSERT INTO `oauth_scopes` (`id`) VALUES
 ('read');
+INSERT INTO `oauth_scopes` (`id`) VALUES
+('write');
 
 -- --------------------------------------------------------
 
