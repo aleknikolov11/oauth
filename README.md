@@ -27,17 +27,9 @@ The 'pdo' section of auth.local.php should be filled to configure the database, 
             'dsn'      => '',
             'username' => '',
             'password' => '',
-            'table' => '',
-            'field' => [
-                'identity' => '',
-                'password' => '',
-            ],
         ],
 ```
   * 'dsn', 'username' and 'password' are used for the PDO database configuration.
-  * 'table' - the name of the table, containing the users information(username and password).
-  * 'identity' - the name of the column from that contains the usernames (from the table specified above).
-  * 'password' - the name of the column from the table that contains user password (from the table specified above).
   
 **Example**
 
@@ -46,11 +38,6 @@ The 'pdo' section of auth.local.php should be filled to configure the database, 
             'dsn'      => 'mysql:host=localhost;dbname=test_db',
             'username' => 'root',
             'password' => 'password',
-            'table' => 'users_table',
-            'field' => [
-                'identity' => 'username_field',
-                'password' => 'password_field',
-            ],
         ],
 ```
 	
