@@ -131,7 +131,9 @@ CREATE INDEX `UNIQ_93804FF8F85E0677` ON oauth_users (`username`);
 -- Dumping data for table `oauth_users`
 --
 
-INSERT INTO `oauth_users` (`username`, `password`, `first_name`, `last_name`) VALUES
-('test_user', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq', 'First', 'Last');
+INSERT INTO `oauth_users` (`username`, `password`) VALUES
+('test_user', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq');
+INSERT INTO `oauth_users` (`username`, `password`) VALUES
+('test_user2', '$2y$10$Hr7ZFo4ANwVWV93XB8R42.Z/rS/awKJhH8UIXGMDtjaMjfDRl1fhq');
 
 
