@@ -86,7 +86,7 @@ The authorization server responds sends a JSON payload with values as follows:
 	
 **Example**
 
-```curl --data="grant_type=authorization_code&client_id=client_name&client_secret=secret&redirect_uri=%2F&code=code_received_from_server" localhost:8080/oauth2/token```
+```curl --data "grant_type=authorization_code&client_id=client_name&client_secret=secret&redirect_uri=%2F&code=code_received_from_server" localhost:8080/oauth2/token```
 
 ### Client Credentials Grant ###
 
@@ -105,7 +105,7 @@ The values returned are as follows:
 	
 **Example**
 
-```curl --data="grant_type=client_credentials&client_id=client_name&client_secret=secret&scope=read" localhost:8080/oauth2/token```
+```curl --data "grant_type=client_credentials&client_id=client_name&client_secret=secret&scope=read" localhost:8080/oauth2/token```
 
 ### Password Grant ###
 
@@ -127,4 +127,4 @@ The authorization server responds with a JSON as follows:
 	
 **Example**
 
-```curl --data="grant_type=password&client_id=client_name&client_secret=secret&scope=read&username=test_user&password=test123" localhost:8080/oauth2/token```
+```curl --data "grant_type=password&client_id=client_name&client_secret=secret&scope=read&username=test_user&password=test123" localhost:8080/oauth2/token```
