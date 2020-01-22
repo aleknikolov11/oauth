@@ -14,9 +14,10 @@ The following grants are supported:
 To run the project, do the following things:
 
   1. Run 'composer install' in the root directory of the project.
-  2. Create an empty database and load the contents of oauth.sql located in ./data.
-  3. Copy auth.local.php.dist to auth.local.php and fill it out as shown in the "Configuration" secton below.
-  4. Run 'composer serve' to serve the app using the 'php -s' command
+  2. Run generate-oauth2-keys located in ./vendor/bin folder. It will automatically generate public, private and ecryption keys in ./data/oauth (Note: The permissions of the keys should be 660).
+  3. Create an empty database and load the contents of oauth.sql located in ./data.
+  4. Copy auth.local.php.dist to auth.local.php and fill it out as shown in the "Configuration" secton below.
+  5. Run 'composer serve' to serve the app using the 'php -s' command
 
 ## Configuration ##
 
