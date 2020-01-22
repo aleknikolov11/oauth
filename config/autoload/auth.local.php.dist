@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use League\OAuth2\Server\Grant;
-
 return [
     'authentication' => [
         'pdo' => [
