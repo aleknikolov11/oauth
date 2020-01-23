@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Login;
 
-use Psr\Container\ContainerInterface;
-use Zend\Expressive\Authentication\Session\PhpSession;
+use Psr\Container\ContainerInterface;;
 use Zend\Expressive\Template\TemplateRendererInterface;
+
+use App\Login\CustomAuthenticationAdapter;
 
 class LoginHandlerFactory
 {
@@ -14,7 +15,7 @@ class LoginHandlerFactory
     {
         return new LoginHandler(
             $container->get(TemplateRendererInterface::class),
-            $container->get(PhpSession::class)
+            $container->get(CustomAuthenticationAdapter::class)
         );
     }
 }

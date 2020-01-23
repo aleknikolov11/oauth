@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 
 use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 use Zend\Expressive\Authentication\UserRepository\PdoDatabase;
+use Zend\Expressive\Authentication\OAuth2\OAuth2Adapter;
+use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\ClientRepository;
+use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\UserRepository;
+
+use App\Repository\AdapterClientRepository;
 
 return [
     // Provides application-wide services.
@@ -17,8 +21,7 @@ return [
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
             Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
-            AuthenticationInterface::class => PhpSession::class,
-            UserRepositoryInterface::class => PdoDatabase::class,
+            ClientRepository::class => AdapterClientRepository::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the

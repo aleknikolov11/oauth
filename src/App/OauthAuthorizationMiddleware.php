@@ -10,8 +10,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\OAuth2\Entity\UserEntity;
 
@@ -22,13 +20,11 @@ class OAuthAuthorizationMiddleware implements MiddlewareInterface
         // A SessionMiddleware populates a session containter
         $session = $request->getAttribute('session');
         $session->set('oauth2_request_params', $request->getQueryParams());
-        $user = $session->get(UserInterface::class);
+        $userId = $session->get(UserEntity::class);
         $authRequest = $request->getAttribute(AuthorizationRequest::class);
-
         // The user is authenticated
-        if ($user) {
-            $user = new UserEntity($user['username']);
-            $authRequest->setUser($user);
+        if ($userId !== null) {
+            $authRequest->setUser(new UserEntity($userId));
             $clientAllowed = $session->get('client_allowed');
 
             // The user needs to give or deny access to the client

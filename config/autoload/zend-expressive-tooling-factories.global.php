@@ -12,10 +12,13 @@ declare(strict_types=1);
 return [
     'dependencies' => [
         'factories' => [
-            App\Login\LoginHandler::class => App\Login\LoginHandlerFactory::class,
             App\OAuthAuthorizationMiddleware::class => App\OAuthAuthorizationMiddlewareFactory::class,
             App\OauthAuthorizationMiddleware::class => App\OauthAuthorizationMiddlewareFactory::class,
             App\OauthConsentHandler::class => App\OauthConsentHandlerFactory::class,
+            App\Login\LoginHandler::class => App\Login\LoginHandlerFactory::class,
+            App\Login\CustomAuthenticationAdapter::class => App\Login\CustomAuthenticationAdapterFactory::class,
+            App\Repository\AdapterClientRepository::class => App\Repository\AdapterClientRepositoryFactory::class,
+            App\Repository\CustomUserRepository::class => App\Repository\CustomUserRepositoryFactory::class,
         ],
     ],
 ];

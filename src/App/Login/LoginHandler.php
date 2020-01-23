@@ -9,11 +9,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\JsonResponse;
+
+use App\Login\CustomAuthenticationAdapter;
 
 class LoginHandler implements RequestHandlerInterface
 {
@@ -25,11 +25,11 @@ class LoginHandler implements RequestHandlerInterface
     private $renderer;
 
     /**
-     * @var PhpSession
+     * @var CustomAuthenticationAdapter
      */
     private $adapter;
 
-    public function __construct(TemplateRendererInterface $renderer, PhpSession $adapter)
+    public function __construct(TemplateRendererInterface $renderer, CustomAuthenticationAdapter $adapter)
     {
         $this->renderer = $renderer;
         $this->adapter = $adapter;

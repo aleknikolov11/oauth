@@ -25,8 +25,8 @@ return [
             Grant\ClientCredentialsGrant::class => Grant\ClientCredentialsGrant::class,
             Grant\PasswordGrant::class          => Grant\PasswordGrant::class,
             Grant\AuthCodeGrant::class          => Grant\AuthCodeGrant::class,
-            Grant\ImplicitGrant::class          => null,
-            Grant\RefreshTokenGrant::class      => null,
+            Grant\ImplicitGrant::class          => Grant\ImplicitGrant::class,
+            Grant\RefreshTokenGrant::class      => Grant\RefreshTokenGrant::class,
         ],
 
         'redirect' => '/login',
