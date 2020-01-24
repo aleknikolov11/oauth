@@ -12,6 +12,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Authentication\OAuth2\Entity\UserEntity;
+use Zend\Diactoros\Response\JsonResponse;
 
 class OAuthAuthorizationMiddleware implements MiddlewareInterface
 {
