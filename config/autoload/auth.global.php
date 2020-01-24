@@ -23,7 +23,7 @@ return [
         // Set value to null to disable a grant
         'grants' => [
             Grant\ClientCredentialsGrant::class => Grant\ClientCredentialsGrant::class,
-            Grant\PasswordGrant::class          => Grant\PasswordGrant::class,
+            Grant\PasswordGrant::class          => null,
             Grant\AuthCodeGrant::class          => Grant\AuthCodeGrant::class,
             Grant\ImplicitGrant::class          => Grant\ImplicitGrant::class,
             Grant\RefreshTokenGrant::class      => Grant\RefreshTokenGrant::class,
